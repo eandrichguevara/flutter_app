@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       initialRoute: 'home',
+      debugShowCheckedModeBanner: false,
       routes: {'home': (context) => const HomeScreen()},
       //Con esto se mantiene en escucha el tema actual
       theme: Provider.of<ThemeProvider>(context).currentTheme,
