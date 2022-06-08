@@ -4,9 +4,9 @@ import 'package:sismos/models/earthquakes_response.dart';
 import 'package:sismos/utils/colors.dart';
 
 class EarthquakeItem extends StatelessWidget {
-  Earthquake earthquake;
+  final Earthquake earthquake;
 
-  EarthquakeItem({Key? key, required this.earthquake}) : super(key: key);
+  const EarthquakeItem({Key? key, required this.earthquake}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,8 @@ class EarthquakeItem extends StatelessWidget {
 
 //Informacion sobre la fecha, latitud, longitud, profundidad y la referencia del sismo
     Widget dataIndicator = SizedBox(
-        width: 220,
+        //120 es el tamaño de la agencia y del indicador de magnitud
+        width: MediaQuery.of(context).size.width * 0.9 - 120,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,

@@ -15,6 +15,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _earthquakeListController = ScrollController();
   @override
   Widget build(BuildContext context) {
+    final earthquakeProviderNoListen =
+        Provider.of<EarthquakesProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       //Inicio del AppBar
@@ -40,19 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
               onChanged: (value) =>
                   Provider.of<ThemeProvider>(context, listen: false)
                       .setThemeMode()),
-          //Boton que nos permite invertir el orden
+          //Boton que nos permite invertir el orden en el EarthquakeList
           IconButton(
             onPressed: () {
-              Provider.of<EarthquakesProvider>(context, listen: false)
-                  .setFilterEarthquakeAsc();
-              //Evita que se mueva el scroll hasta el final al activar el reverse en el ListView del EarthquakeList
-              _earthquakeListController.jumpTo((Provider.of<
-                              EarthquakesProvider>(context, listen: false)
-                          .filterOrderAsc ??
-                      true)
-                  //El +50 y -50 son para indicar al usuario con un pequeño efecto que se a actualizado el orden
-                  ? _earthquakeListController.position.maxScrollExtent + 50
-                  : -50);
+              earthquakeProviderNoListen.setFilterEarthquakeAsc(
+                  filterOrderAsc:
+                      !(earthquakeProviderNoListen.filterOrderAsc ?? true));
             },
             icon: Icon(
                 (Provider.of<EarthquakesProvider>(context).filterOrderAsc ??

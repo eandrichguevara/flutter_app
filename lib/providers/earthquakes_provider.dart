@@ -8,6 +8,7 @@ class EarthquakesProvider extends ChangeNotifier {
 
   List<Earthquake> onDisplayEarthquakes = [];
 
+  String? filter;
   bool? filterOrderAsc;
 
 //Inicializacion del provider de sismos
@@ -28,9 +29,26 @@ class EarthquakesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-//Metodo que nos permite invertir el orden de la lista
-  setFilterEarthquakeAsc() {
-    filterOrderAsc = !(filterOrderAsc ?? true);
+  setFilter({required String filter}) {
+    switch (filter) {
+      case 'fecha':
+        onDisplayEarthquakes
+            .sort((a, b) => a.fecha.difference(b.fecha).inMinutes);
+        setFilterEarthquakeAsc(filterOrderAsc: false);
+        break;
+      case 'magnitud':
+        onDisplayEarthquakes.sort((a, b) =>
+            (a.magnitudDouble * 10).truncate() -
+            (b.magnitudDouble * 10).truncate());
+        setFilterEarthquakeAsc(filterOrderAsc: false);
+        break;
+    }
+    this.filter = filter;
+  }
+
+  setFilterEarthquakeAsc({required bool filterOrderAsc}) {
+    this.filterOrderAsc = filterOrderAsc;
+    onDisplayEarthquakes = onDisplayEarthquakes.reversed.toList();
     notifyListeners();
   }
 }

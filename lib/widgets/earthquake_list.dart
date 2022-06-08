@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sismos/providers/earthquakes_provider.dart';
 import 'package:sismos/widgets/earthquake_item.dart';
+import 'package:sismos/widgets/earthquake_list_filter.dart';
 
 class EarthquakesList extends StatefulWidget {
-  ScrollController controller;
-  EarthquakesList({Key? key, required this.controller}) : super(key: key);
+  final ScrollController controller;
+  const EarthquakesList({Key? key, required this.controller}) : super(key: key);
 
   @override
-  State<EarthquakesList> createState() =>
-      _EarthquakesListState(controller: controller);
+  State<EarthquakesList> createState() => _EarthquakesListState();
 }
 
 class _EarthquakesListState extends State<EarthquakesList> {
-  ScrollController controller;
-  _EarthquakesListState({required this.controller});
-
   @override
   Widget build(BuildContext context) {
     //Inicializacion del provider de los sismos
     final earthquakesProvider = Provider.of<EarthquakesProvider>(context);
+
+    widget.controller.addListener(() {
+      setState(() {});
+    });
 
     return Container(
         decoration: BoxDecoration(
@@ -29,13 +30,17 @@ class _EarthquakesListState extends State<EarthquakesList> {
         //Constructor de la lista de Sismos
         child: earthquakesProvider.onDisplayEarthquakes.isNotEmpty
             ? ListView.builder(
-                controller: controller,
-                reverse: (earthquakesProvider.filterOrderAsc ?? true),
-                itemCount: earthquakesProvider.onDisplayEarthquakes.length,
+                controller: widget.controller,
+                //Agregamos 1 item para insertar el filtro
+                itemCount: earthquakesProvider.onDisplayEarthquakes.length + 1,
                 itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    return const EarthquakeListFilter();
+                  }
                   return EarthquakeItem(
                       earthquake:
-                          earthquakesProvider.onDisplayEarthquakes[index]);
+                          //Restamos 1 al index para compensar el que agregamos
+                          earthquakesProvider.onDisplayEarthquakes[index - 1]);
                 },
               )
             : const Center(
